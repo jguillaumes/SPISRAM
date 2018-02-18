@@ -1,6 +1,11 @@
 /*
  * SPISRAM.h
  *
+ * Serial SRAM device support for AVR attmega MCUs
+ * Requires the Arduino libraries.
+ *
+ * See LICENSE.md and README.md for details
+ *
  *  Created on: Feb 16, 2018
  *      Author: jguillaumes
  */
@@ -10,6 +15,7 @@
 
 #include <SPI.h>
 
+#define SPISRAM_VERSION "01.00.00"
 
 class SPISRAM {
 public:
