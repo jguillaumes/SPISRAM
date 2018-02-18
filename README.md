@@ -101,6 +101,12 @@ Error getLastError();
 
 Returns the last error detected by the library, as a member of the ```Error``` enumeration.
 
+### getSize
+```
+uint32_t getSize()
+```
+Returns the device capacity, in bytes
+
 
 ### Data transfer methods
 

@@ -119,9 +119,9 @@ void SPISRAM::readBuffer(unsigned int size, byte *buffer) {
  * It also sets the initial mode
  */
 bool SPISRAM::begin(Mode mode, unsigned int pageLen) {
-	char msg[80];
 
 #ifdef DEBUG
+	char msg[80];
 	sprintf(msg,"Starting SRAM CS: %d, _bytes: %08lX\n", _cspin, _bytes);
 	Serial.print(msg);
 #endif

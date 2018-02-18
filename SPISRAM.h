@@ -32,7 +32,8 @@ public:
 	bool setMode(Mode mode=SEQ, unsigned int pageLen=32);
 	bool write(uint32_t address, unsigned int size, byte *buffer);
 	bool read(uint32_t address, unsigned int size, byte *buffer);
-	byte readByte(unsigned int address);
+//	byte readByte(unsigned int address);
+	uint32_t getSize() { return _bytes; }
 	Error getLastError() {
 		return _lastError;
 	}
