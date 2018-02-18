@@ -7,6 +7,7 @@
 
 #include "SPISRAM.h"
 
+#ifdef DEBUG
 void PrintHex8(uint8_t *data, uint8_t length) // prints 8-bit data in hex with leading zeroes
 {
        Serial.print("0x");
@@ -16,6 +17,7 @@ void PrintHex8(uint8_t *data, uint8_t length) // prints 8-bit data in hex with l
          Serial.print(" ");
        }
 }
+#endif
 
 SPISRAM::SPISRAM(SPIClass * spi, unsigned int kilobits, unsigned int cspin) {
 	_cspin = cspin;
@@ -42,16 +44,18 @@ void SPISRAM::finishOp() {
 }
 
 bool SPISRAM::sendCommand(SPISRAM::Op cmd, uint32_t addr) {
-/*
+
 	if (addr > _bytes) {
-		_lastError = BADADDR;
+#ifdef DEBUG
 		Serial.println("Error BADADDR - sendCommand");
 		char msg[80];
 		sprintf(msg,"addr: %08lX, _bytes: %08lX\n", addr, _bytes);
 		Serial.print(msg);
-		// return false;
+#endif
+		_lastError = BADADDR;
+		return false;
 	}
-*/
+
 	uint8_t a1 = (addr & 0x00ff0000) >> 16;
 	uint8_t a2 = (addr & 0x0000ff00) >> 8;
 	uint8_t a3 = (addr & 0x000000ff);
@@ -80,8 +84,10 @@ void SPISRAM::readBuffer(unsigned int size, byte *buffer) {
 bool SPISRAM::begin(Mode mode, unsigned int pageLen) {
 	char msg[80];
 
+#ifdef DEBUG
 	sprintf(msg,"Starting SRAM CS: %d, _bytes: %08lX\n", _cspin, _bytes);
 	Serial.print(msg);
+#endif
 
 	bool result = false;
 	byte modeReg;
@@ -171,13 +177,17 @@ bool SPISRAM::write(uint32_t address, unsigned int size, byte *buffer) {
 		case PAGE:
 			if (size > _pageLen) {
 				_lastError = BADSIZ;
+#ifdef DEBUG
 				Serial.println("Error BADSIZ - write");
+#endif
 			}
 			/* no break */
 		case SEQ:
 			if (size < 1) {
 				_lastError = BADSIZ;
+#ifdef DEBUG
 				Serial.println("Error BADSIZ - write");
+#endif
 			} else {
 				startOp();
 				if (sendCommand(WRITE,address)) {
@@ -189,7 +199,9 @@ bool SPISRAM::write(uint32_t address, unsigned int size, byte *buffer) {
 			break;
 		default:
 			_lastError = ERR;
+#ifdef DEBUG
 			Serial.println("Error ERR - write");
+#endif
 			break;
 	}
 	return outcome;
@@ -212,14 +224,18 @@ bool SPISRAM::read(uint32_t address, unsigned int size, byte *buffer) {
 		case PAGE:
 			if (size > _pageLen) {
 				_lastError = BADSIZ;
+#ifdef DEBUG
 				Serial.println("Error BADSIZ - read");
+#endif
 				return false;
 			}
 			/* no break */
 		case SEQ:
 			if (size<1) {
 				_lastError = BADSIZ;
+#ifdef DEBUG
 				Serial.println("Error BADSIZ - read");
+#endif
 			} else {
 				startOp();
 				if (sendCommand(READ,address)) {
@@ -231,7 +247,9 @@ bool SPISRAM::read(uint32_t address, unsigned int size, byte *buffer) {
 			break;
 		default:
 			_lastError = ERR;
+#ifdef DEBUG
 			Serial.println("Error ERR - read");
+#endif
 			break;
 	}
 	return outcome;
