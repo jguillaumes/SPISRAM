@@ -12,7 +12,7 @@ The 23LCV1024 chip is a serial SRAM memory device, which can store up to 1 megab
 
 The atmega32x chips contain a hardware implementarion of the SPI protocol. Please check your Arduino documentation to see which Arduino Pins correspond to MOSI, MISO and SCK. You can choose whatever available pin to act as CS; the recommended one is PIN10, and it is also the default.
 
-You can download the datasheet here: https:ww1.microchip.com/downloads/en/DeviceDoc/25156A.pdf
+You can download the datasheet [here](https:ww1.microchip.com/downloads/en/DeviceDoc/25156A.pdf).
 
 This library provides just basic support to initialize, read and write data from and to the device. You can use any of the three transfer modes available:
 
@@ -103,3 +103,31 @@ Returns the last error detected by the library, as a member of the ```Error``` e
 
 
 ### Data transfer methods
+
+The library defines just two methods for data transfer, which handle arrays of bytes (```uint8_t```).
+
+#### read()
+
+```
+bool read(uint32_t address, unsigned int size, byte *buffer);
+```
+
+This method reads up to ```size``` bytes from the device at address ```address``` into the byte array ```buffer```.
+
+- address: memory address (insde the device). It must not be outside the device range. In the case of the 23LCV1024 that means its maximum is 0x00020000.
+- size: number of bytes to transfer. If in PAGE mode it must be less than the declared page size.
+- buffer: destination address (inside the MCU) of the read data.
+
+
+#### write()
+
+```
+bool write(uint32_t address, unsigned int size, byte *buffer);
+```
+
+This method writes up to ```size``` bytes to the device at address ```address``` from the byte array ```buffer```.
+
+- address: memory address (insde the device). It must not be outside the device range. In the case of the 23LCV1024 that means its maximum is 0x00020000.
+- size: number of bytes to transfer. If in PAGE mode it must be less than the declared page size.
+- buffer: source address (inside the MCU) of the data to be written.
+
